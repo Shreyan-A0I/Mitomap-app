@@ -1,0 +1,12 @@
+{
+  "total_variants": 3439,
+  "n_pathogenic": 116,
+  "n_benign": 1611,
+  "n_vus": 1228,
+  "n_other": 484,
+  "n_phenotypes": 808,
+  "vus_in_pathogenic_clusters": 482,
+  "silhouette_score": 0.577,
+  "test_auprc": 0.7924910845665023,
+  "test_auroc": 0.7650283553875236
+}
