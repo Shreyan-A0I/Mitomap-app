@@ -66,19 +66,18 @@ export default function NetworkGraph({ onNodeClick }: Props) {
             .catch(() => setLoading(false));
     }, []);
 
-    // Responsive sizing
+    // Responsive sizing via ResizeObserver (clientWidth excludes border)
     useEffect(() => {
-        const updateSize = () => {
-            if (containerRef.current) {
-                setDimensions({
-                    width: containerRef.current.offsetWidth,
-                    height: 520,
-                });
-            }
-        };
-        updateSize();
-        window.addEventListener("resize", updateSize);
-        return () => window.removeEventListener("resize", updateSize);
+        const el = containerRef.current;
+        if (!el) return;
+        const ro = new ResizeObserver(() => {
+            setDimensions({
+                width: el.clientWidth,
+                height: 520,
+            });
+        });
+        ro.observe(el);
+        return () => ro.disconnect();
     }, []);
 
     const formatLabel = useCallback((node: GraphNode) => {
