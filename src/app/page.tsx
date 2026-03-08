@@ -4,6 +4,7 @@ import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import StatsBar from "@/components/StatsBar";
 import LatentSpaceViewer from "@/components/LatentSpaceViewer";
+import NetworkGraph from "@/components/NetworkGraph";
 import PredictionTable from "@/components/PredictionTable";
 
 export default function Home() {
@@ -30,7 +31,19 @@ export default function Home() {
           <LatentSpaceViewer onPointClick={setSelectedVariant} />
         </section>
 
-        {/* Predictions Table */}
+        {/* Network Graph */}
+        <section>
+          <div className="mb-3">
+            <h2 className="text-lg font-semibold">
+              Mitochondrial Complex Graph
+            </h2>
+            <p className="text-xs text-muted">
+              Force-directed layout: Complexes → Genes → Variants → Phenotypes
+              • Click a variant to filter the table • Drag nodes to explore
+            </p>
+          </div>
+          <NetworkGraph onNodeClick={setSelectedVariant} />
+        </section>
         <section>
           <div className="mb-3 flex items-center justify-between">
             <div>
