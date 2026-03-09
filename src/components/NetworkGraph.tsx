@@ -15,8 +15,7 @@ interface NodeFeatures {
     alt?: string;
     clinical_significance?: string;
     phylop?: number;
-    apogee?: number;
-    mitotip?: number;
+    mutation_type?: string;
     // Gene
     biotype?: string;
     genome_range?: string;
@@ -331,11 +330,8 @@ export default function NetworkGraph({ onNodeClick }: Props) {
                                         <FeatureRow label="PhyloP" value={inspected.features.phylop?.toFixed(3)} highlight={
                                             (inspected.features.phylop ?? 0) > 1.5
                                         } />
-                                        {inspected.features.apogee !== undefined && inspected.features.apogee > 0 && (
-                                            <FeatureRow label="APOGEE" value={inspected.features.apogee.toFixed(3)} />
-                                        )}
-                                        {inspected.features.mitotip !== undefined && inspected.features.mitotip > 0 && (
-                                            <FeatureRow label="MitoTIP" value={inspected.features.mitotip.toFixed(3)} />
+                                        {inspected.features.mutation_type && (
+                                            <FeatureRow label="Type" value={inspected.features.mutation_type} />
                                         )}
                                     </div>
                                 </>
