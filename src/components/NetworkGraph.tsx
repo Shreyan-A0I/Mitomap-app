@@ -8,11 +8,31 @@ const ForceGraph2D = dynamic(() => import("react-force-graph-2d"), {
     ssr: false,
 });
 
+interface NodeFeatures {
+    // Variant
+    position?: number;
+    ref?: string;
+    alt?: string;
+    clinical_significance?: string;
+    phylop?: number;
+    apogee?: number;
+    mitotip?: number;
+    // Gene
+    biotype?: string;
+    genome_range?: string;
+    // Complex
+    complex_id?: string;
+    // Phenotype
+    disease_name?: string;
+    connected_variants?: number;
+}
+
 interface GraphNode {
     id: string;
     label: string;
     type: "Complex" | "Gene" | "Pathogenic" | "Flagged_VUS" | "Phenotype";
     size: number;
+    features?: NodeFeatures;
     x?: number;
     y?: number;
     [key: string]: unknown;
@@ -22,6 +42,7 @@ interface GraphLink {
     source: string;
     target: string;
     type: "PART_OF" | "LOCATED_IN" | "ASSOCIATED_WITH";
+    attention?: number;
     [key: string]: unknown;
 }
 
@@ -45,6 +66,12 @@ const LINK_COLORS: Record<string, string> = {
     ASSOCIATED_WITH: "#f5990b44",
 };
 
+const LINK_COLORS_BRIGHT: Record<string, string> = {
+    PART_OF: "#a78bfa",
+    LOCATED_IN: "#38bdf8",
+    ASSOCIATED_WITH: "#f59e0b",
+};
+
 interface Props {
     onNodeClick?: (variantId: string) => void;
 }
@@ -53,6 +80,7 @@ export default function NetworkGraph({ onNodeClick }: Props) {
     const [data, setData] = useState<GraphData | null>(null);
     const [loading, setLoading] = useState(true);
     const [hovered, setHovered] = useState<GraphNode | null>(null);
+    const [inspected, setInspected] = useState<GraphNode | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const [dimensions, setDimensions] = useState({ width: 800, height: 520 });
 
@@ -97,6 +125,7 @@ export default function NetworkGraph({ onNodeClick }: Props) {
             const x = node.x ?? 0;
             const y = node.y ?? 0;
             const color = NODE_COLORS[gNode.type] || "#888";
+            const isInspected = inspected?.id === gNode.id;
 
             // Draw node circle
             ctx.beginPath();
@@ -143,10 +172,10 @@ export default function NetworkGraph({ onNodeClick }: Props) {
             ctx.fillStyle = color;
             ctx.fill();
 
-            // Border on hover
-            if (hovered && hovered.id === gNode.id) {
-                ctx.strokeStyle = "#fff";
-                ctx.lineWidth = 1.5;
+            // Border on hover or inspected
+            if ((hovered && hovered.id === gNode.id) || isInspected) {
+                ctx.strokeStyle = isInspected ? "#fff" : "rgba(255,255,255,0.7)";
+                ctx.lineWidth = isInspected ? 2 : 1.5;
                 ctx.stroke();
             }
 
@@ -175,7 +204,7 @@ export default function NetworkGraph({ onNodeClick }: Props) {
                 }
             }
         },
-        [hovered, formatLabel]
+        [hovered, inspected, formatLabel]
     );
 
     if (loading || !data) {
@@ -202,21 +231,33 @@ export default function NetworkGraph({ onNodeClick }: Props) {
                 nodeCanvasObject={drawNode}
                 nodeCanvasObjectMode={() => "replace"}
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                linkColor={(link: any) => LINK_COLORS[link.type] || "#333"}
-                linkWidth={1}
+                linkColor={(link: any) => {
+                    const att = link.attention ?? 0.5;
+                    if (att > 0.3) return LINK_COLORS_BRIGHT[link.type] || "#666";
+                    return LINK_COLORS[link.type] || "#333";
+                }}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                linkWidth={(link: any) => {
+                    const att = link.attention ?? 0.5;
+                    return 0.5 + att * 4;
+                }}
                 linkDirectionalParticles={1}
                 linkDirectionalParticleWidth={1.5}
-                linkDirectionalParticleSpeed={0.004}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                linkDirectionalParticleSpeed={(link: any) => {
+                    const att = link.attention ?? 0.5;
+                    return 0.002 + att * 0.006;
+                }}
                 linkCurvature={0.15}
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 onNodeHover={(node) => setHovered((node as GraphNode) ?? null)}
                 onNodeClick={(node) => {
                     const gNode = node as GraphNode;
+                    setInspected(prev => prev?.id === gNode.id ? null : gNode);
                     if (
                         (gNode.type === "Pathogenic" || gNode.type === "Flagged_VUS") &&
                         onNodeClick
                     ) {
-                        // Extract raw variant id from node id (V:var_3733_G_A → var_3733_G_A)
                         const rawId = gNode.id.replace(/^V:/, "");
                         onNodeClick(rawId);
                     }
@@ -243,10 +284,13 @@ export default function NetworkGraph({ onNodeClick }: Props) {
                         </div>
                     ))}
                 </div>
+                <div className="mt-1.5 flex items-center gap-2 text-[9px] text-muted/70">
+                    <span>Edge thickness = attention weight (α)</span>
+                </div>
             </div>
 
             {/* Hover tooltip */}
-            {hovered && (
+            {hovered && !inspected && (
                 <div className="absolute top-3 right-3 rounded-lg border border-border/50 bg-surface/90 px-3 py-2 backdrop-blur-sm text-xs">
                     <p className="font-semibold text-foreground">
                         {formatLabel(hovered)}
@@ -254,6 +298,89 @@ export default function NetworkGraph({ onNodeClick }: Props) {
                     <p className="text-muted capitalize">{hovered.type.replace("_", " ")}</p>
                 </div>
             )}
+
+            {/* Node inspection panel */}
+            {inspected && (
+                <div className="absolute top-3 right-3 w-72 rounded-xl border border-border/60 bg-surface/95 px-4 py-3 backdrop-blur-md shadow-xl">
+                    <div className="flex items-start justify-between mb-2">
+                        <div>
+                            <p className="font-semibold text-sm text-foreground">
+                                {formatLabel(inspected)}
+                            </p>
+                            <p className="text-[10px] text-muted capitalize">
+                                {inspected.type.replace("_", " ")}
+                            </p>
+                        </div>
+                        <button
+                            onClick={() => setInspected(null)}
+                            className="text-muted hover:text-foreground text-xs ml-2 mt-0.5"
+                        >
+                            ✕
+                        </button>
+                    </div>
+
+                    {inspected.features && (
+                        <div className="space-y-1.5 text-[11px]">
+                            {/* Variant features */}
+                            {(inspected.type === "Pathogenic" || inspected.type === "Flagged_VUS") && (
+                                <>
+                                    <div className="grid grid-cols-2 gap-x-3 gap-y-1">
+                                        <FeatureRow label="Position" value={`m.${inspected.features.position}`} />
+                                        <FeatureRow label="Change" value={`${inspected.features.ref}>${inspected.features.alt}`} />
+                                        <FeatureRow label="ClinSig" value={inspected.features.clinical_significance} />
+                                        <FeatureRow label="PhyloP" value={inspected.features.phylop?.toFixed(3)} highlight={
+                                            (inspected.features.phylop ?? 0) > 1.5
+                                        } />
+                                        {inspected.features.apogee !== undefined && inspected.features.apogee > 0 && (
+                                            <FeatureRow label="APOGEE" value={inspected.features.apogee.toFixed(3)} />
+                                        )}
+                                        {inspected.features.mitotip !== undefined && inspected.features.mitotip > 0 && (
+                                            <FeatureRow label="MitoTIP" value={inspected.features.mitotip.toFixed(3)} />
+                                        )}
+                                    </div>
+                                </>
+                            )}
+
+                            {/* Gene features */}
+                            {inspected.type === "Gene" && (
+                                <div className="grid grid-cols-2 gap-x-3 gap-y-1">
+                                    <FeatureRow label="Biotype" value={inspected.features.biotype} />
+                                    <FeatureRow label="Range" value={inspected.features.genome_range} />
+                                </div>
+                            )}
+
+                            {/* Complex features */}
+                            {inspected.type === "Complex" && (
+                                <FeatureRow label="Complex" value={inspected.features.complex_id} />
+                            )}
+
+                            {/* Phenotype features */}
+                            {inspected.type === "Phenotype" && (
+                                <div className="space-y-1">
+                                    <FeatureRow label="Disease" value={inspected.features.disease_name} />
+                                    <FeatureRow label="Linked variants" value={inspected.features.connected_variants} />
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+            )}
+        </div>
+    );
+}
+
+function FeatureRow({ label, value, highlight }: {
+    label: string;
+    value?: string | number | null;
+    highlight?: boolean;
+}) {
+    if (value === undefined || value === null) return null;
+    return (
+        <div className="flex items-baseline gap-1">
+            <span className="text-muted/70 shrink-0">{label}</span>
+            <span className={`font-mono text-[10px] ${highlight ? 'text-accent font-semibold' : 'text-foreground'}`}>
+                {value}
+            </span>
         </div>
     );
 }

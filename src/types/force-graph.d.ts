@@ -41,8 +41,8 @@ declare module "react-force-graph-2d" {
         linkColor?: string | ((link: LinkObject) => string);
         linkWidth?: number | ((link: LinkObject) => number);
         linkDirectionalParticles?: number | ((link: LinkObject) => number);
-        linkDirectionalParticleWidth?: number;
-        linkDirectionalParticleSpeed?: number;
+        linkDirectionalParticleWidth?: number | ((link: LinkObject) => number);
+        linkDirectionalParticleSpeed?: number | ((link: LinkObject) => number);
         linkCurvature?: number;
         onNodeClick?: (node: NodeObject, event: MouseEvent) => void;
         onNodeHover?: (node: NodeObject | null, prevNode: NodeObject | null) => void;
