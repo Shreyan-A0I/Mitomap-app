@@ -24,7 +24,7 @@ export default function Home() {
             Mutations in mitochondrial DNA cause rare neurodegenerative and
             metabolic diseases, but roughly 40% of known variants remain
             classified as &ldquo;Variants of Uncertain Significance&rdquo;
-            (VUS) &mdash; meaning clinicians cannot tell patients whether their
+            (VUS) - meaning clinicians cannot tell patients whether their
             mutation is harmful. MitoGraph uses a Graph Attention Network
             trained on a knowledge graph of genes, diseases, and conservation
             data to predict which VUS are likely pathogenic. Explore the
