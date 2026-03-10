@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import StatsBar from "@/components/StatsBar";
+import FeatureImportanceChart from "@/components/FeatureImportanceChart";
 import LatentSpaceViewer from "@/components/LatentSpaceViewer";
 import NetworkGraph from "@/components/NetworkGraph";
 import PredictionTable from "@/components/PredictionTable";
@@ -34,8 +35,15 @@ export default function Home() {
           </p>
         </section>
 
-        {/* Stats Overview */}
-        <StatsBar />
+        {/* Stats & Diagnostics Overview */}
+        <div className="grid gap-6 md:grid-cols-3">
+          <div className="md:col-span-2">
+            <StatsBar />
+          </div>
+          <div className="h-full">
+            <FeatureImportanceChart />
+          </div>
+        </div>
 
         {/* 1. Network Graph (Concrete biology first) */}
         <section>
