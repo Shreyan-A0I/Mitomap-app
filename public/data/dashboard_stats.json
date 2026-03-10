@@ -5,8 +5,8 @@
   "n_vus": 1228,
   "n_other": 484,
   "n_phenotypes": 808,
-  "vus_in_pathogenic_clusters": 76,
-  "silhouette_score": 0.975,
-  "test_auprc": 0.7244158185071232,
-  "test_auroc": 0.7583742911153118
+  "vus_in_pathogenic_clusters": 322,
+  "silhouette_score": 0.5822,
+  "test_auprc": 0.8296869514543943,
+  "test_auroc": 0.788960302457467
 }
