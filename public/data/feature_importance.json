@@ -1,58 +1,58 @@
 [
   {
-    "feature": "Position Y (cos)",
-    "importance": 8.235704283909978
-  },
-  {
-    "feature": "Is Indel",
-    "importance": 8.013294177858352
-  },
-  {
-    "feature": "Alt: T",
-    "importance": 7.795025143779194
-  },
-  {
-    "feature": "Is Transversion",
-    "importance": 7.604461650752607
-  },
-  {
-    "feature": "Ref: T",
-    "importance": 7.543028666449024
-  },
-  {
-    "feature": "Alt: C",
-    "importance": 7.426563238828594
-  },
-  {
-    "feature": "Is Transition",
-    "importance": 7.314562657981238
-  },
-  {
-    "feature": "Alt: A",
-    "importance": 7.312529599507727
-  },
-  {
-    "feature": "Ref: C",
-    "importance": 6.8722236890396955
+    "feature": "PhyloP (Conservation)",
+    "importance": 7.973043560182097
   },
   {
     "feature": "Position X (sin)",
-    "importance": 6.555494660822174
+    "importance": 7.772955839452339
   },
   {
-    "feature": "PhyloP (Conservation)",
-    "importance": 6.525397513545532
+    "feature": "Is Transversion",
+    "importance": 7.468930561942558
   },
   {
-    "feature": "Ref: A",
-    "importance": 6.37689306257703
+    "feature": "Position Y (cos)",
+    "importance": 7.3989634949259875
   },
   {
-    "feature": "Alt: G",
-    "importance": 6.3709322062240545
+    "feature": "Is Transition",
+    "importance": 7.279943655100192
+  },
+  {
+    "feature": "Is Indel",
+    "importance": 7.232044118611794
   },
   {
     "feature": "Ref: G",
-    "importance": 6.053892539653681
+    "importance": 7.1877944653628925
+  },
+  {
+    "feature": "Alt: T",
+    "importance": 7.141123747279776
+  },
+  {
+    "feature": "Ref: T",
+    "importance": 7.100273662410035
+  },
+  {
+    "feature": "Alt: G",
+    "importance": 6.951477732152567
+  },
+  {
+    "feature": "Alt: C",
+    "importance": 6.946894044450327
+  },
+  {
+    "feature": "Ref: A",
+    "importance": 6.815823738417979
+  },
+  {
+    "feature": "Ref: C",
+    "importance": 6.495845764825353
+  },
+  {
+    "feature": "Alt: A",
+    "importance": 6.2348783004908315
   }
 ]

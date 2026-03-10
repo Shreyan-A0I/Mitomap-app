@@ -23,7 +23,7 @@ export default function Navbar() {
                 <div className="flex items-center gap-4">
                     <div className="flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1 text-xs text-emerald-400">
                         <Activity className="h-3 w-3" />
-                        <span>GATv2Conv • 4 Heads</span>
+                        <span>GATv2Conv • 8 Heads</span>
                     </div>
                     <a
                         href="https://github.com/Shreyan-A0I/spotNUMT"
