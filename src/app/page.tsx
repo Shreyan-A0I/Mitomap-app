@@ -25,7 +25,7 @@ export default function Home() {
             Mutations in mitochondrial DNA cause rare neurodegenerative and
             metabolic diseases, but roughly 40% of known variants remain
             classified as &ldquo;Variants of Uncertain Significance&rdquo;
-            (VUS) - meaning clinicians cannot tell patients whether their
+            (VUS), meaning clinicians cannot tell patients whether their
             mutation is harmful. MitoGraph uses a Graph Attention Network
             trained on a knowledge graph of genes, diseases, and conservation
             data to predict which VUS are likely pathogenic. Explore the
@@ -105,29 +105,29 @@ export default function Home() {
           </h3>
           <div className="grid gap-3 sm:grid-cols-2 text-xs text-muted leading-relaxed">
             <div>
-              <span className="font-medium text-foreground/80">MITOMAP</span>{" "}
-              &mdash; Variant-to-phenotype linkages, functional classifications,
+              <span className="font-medium text-foreground/80">MITOMAP</span>:{" "}
+              Variant-to-phenotype linkages, functional classifications,
               and APOGEE pathogenicity probabilities.
             </div>
             <div>
               <span className="font-medium text-foreground/80">
                 ClinVar (NCBI)
-              </span>{" "}
-              &mdash; Clinical observations and the primary set of Variants of
+              </span>:{" "}
+              Clinical observations and the primary set of Variants of
               Uncertain Significance (VUS).
             </div>
             <div>
               <span className="font-medium text-foreground/80">
                 rCRS (NC_012920.1)
-              </span>{" "}
-              &mdash; 16,569 bp revised Cambridge Reference Sequence, the
+              </span>:{" "}
+              16,569 bp revised Cambridge Reference Sequence, the
               coordinate system for the knowledge graph.
             </div>
             <div>
               <span className="font-medium text-foreground/80">
                 PhyloP (UCSC)
-              </span>{" "}
-              &mdash; 100-vertebrate evolutionary conservation scores used as
+              </span>:{" "}
+              100-vertebrate evolutionary conservation scores used as
               structural features for the GATv2Conv encoder.
             </div>
           </div>
